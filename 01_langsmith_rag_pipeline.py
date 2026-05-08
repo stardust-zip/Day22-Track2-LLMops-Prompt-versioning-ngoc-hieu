@@ -23,6 +23,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langsmith import traceable
 from pydantic import SecretStr
 
+from qa_pairs import QA_PAIRS
+
 # ── 1. Environment setup (must happen before LangChain imports are used) ─────
 _dotenv_path = Path(__file__).parent / ".env"
 load_dotenv(_dotenv_path)
@@ -131,61 +133,6 @@ def ask(chain, question: str) -> str:
     return chain.invoke(question)
 
 
-# ── 8. Sample questions (50 total — one per topic area) ────────────────────
-SAMPLE_QUESTIONS = [
-    "What are the three main types of machine learning?",
-    "What is overfitting in machine learning?",
-    "Explain the bias-variance tradeoff.",
-    "How does regularization prevent overfitting?",
-    "What is cross-validation?",
-    "What is backpropagation?",
-    "What are Convolutional Neural Networks primarily used for?",
-    "How do LSTM networks address the vanishing gradient problem?",
-    "What activation functions are commonly used in neural networks?",
-    "What is the role of pooling layers in CNNs?",
-    "What is the transformer architecture?",
-    "What are word embeddings?",
-    "What is transfer learning in NLP?",
-    "How does BERT handle language understanding?",
-    "What is self-attention in transformers?",
-    "What is GPT and how is it trained?",
-    "What is instruction tuning?",
-    "What is RLHF?",
-    "What is chain-of-thought prompting?",
-    "What is the context length of GPT-4?",
-    "What is Retrieval-Augmented Generation?",
-    "What are the main components of a RAG pipeline?",
-    "What is dense retrieval?",
-    "Why is chunking strategy important in RAG?",
-    "What advanced RAG techniques exist beyond basic retrieval?",
-    "What are vector databases used for?",
-    "What is FAISS?",
-    "How do text embeddings capture semantic meaning?",
-    "What is HNSW?",
-    "What is hybrid search in vector databases?",
-    "What is LangChain?",
-    "What is LangChain Expression Language (LCEL)?",
-    "What is LangGraph?",
-    "What memory types does LangChain support?",
-    "What are LangChain retrievers?",
-    "What is LangSmith?",
-    "What information do LangSmith traces capture?",
-    "What is the LangSmith Prompt Hub?",
-    "How does LangSmith help monitor production LLM applications?",
-    "What are LangSmith datasets used for?",
-    "What is RAGAS?",
-    "How does RAGAS compute faithfulness?",
-    "What is answer relevancy in RAGAS?",
-    "What is context recall in RAGAS?",
-    "What inputs does RAGAS evaluation require?",
-    "What is Guardrails AI?",
-    "What is PII and why is it important to detect in LLM responses?",
-    "What does structured output validation ensure?",
-    "What is Constitutional AI?",
-    "What are common AI safety concerns with LLMs?",
-]
-
-
 # ── 9. Main ─────────────────────────────────────────────────────────────────
 def main():
     print("=" * 60)
@@ -198,15 +145,15 @@ def main():
     # Build the RAG chain
     chain, retriever = build_rag_chain(vectorstore)
 
-    # Loop through all SAMPLE_QUESTIONS, call ask(), print results
-    for i, question in enumerate(SAMPLE_QUESTIONS, 1):
-        answer = ask(chain, question)
-        print(f"[{i:02d}/{len(SAMPLE_QUESTIONS)}] Q: {question[:60]}")
+    # Loop through all questions from qa_pairs.py, call ask(), print results
+    for i, qa in enumerate(QA_PAIRS, 1):
+        answer = ask(chain, qa["question"])
+        print(f"[{i:02d}/{len(QA_PAIRS)}] Q: {qa['question'][:60]}")
         print(f"       A: {answer[:100]}\n")
 
     # Print confirmation that traces were sent
     print(
-        f"✅ {len(SAMPLE_QUESTIONS)} traces sent to LangSmith project "
+        f"✅ {len(QA_PAIRS)} traces sent to LangSmith project "
         f"'{os.environ['LANGCHAIN_PROJECT']}'"
     )
     print("   Open https://smith.langchain.com to view traces.")
