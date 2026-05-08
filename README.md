@@ -1,5 +1,7 @@
 # 🧪 Day 22 Lab — LangSmith + Prompt Versioning
 
+Link trace: https://smith.langchain.com/public/09bf1e30-293c-403d-831c-0e19440ae57f/r
+
 ## Overview
 
 In this lab you will build a **production-grade RAG (Retrieval-Augmented Generation) pipeline** and instrument it end-to-end using **LangSmith** for observability, **Prompt Hub** for versioned prompt management, **RAGAS** for automated evaluation, and **Guardrails AI** for output safety.
